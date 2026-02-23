@@ -1,15 +1,26 @@
 // import getIndexFile function -- helper.js
-
-// import getDummyJsonProductsData function -- helper.js
-
 // import cardTemplate function -- helper.js
+// import getDummyJsonProductsData function -- helper.js
+const { getDummyJsonProductsData, getIndexFile, cardTemplate, saveOutputFile } = require("./helper");
 
-// loop on the products data
-//         populate the card template by replacing __IMG_LINK__ , __TITLE__ , __PRICE__
-//         push that template into some string or array
+const indexFileText = getIndexFile();
+const cardTemplateText = cardTemplate();
 
-// put this string / array into the index.html text
+const createUI = (data) => {
+    let finalCardsText = ``;
 
-// by replacing __PLACE_HOLDER__ with that string or array
+    const { list } = data;
+    list.forEach((product) => {
+        let filledTemplateText = cardTemplateText.replace("__IMG_LINK__", product.videoThumbnails[2].url);
+        filledTemplateText = filledTemplateText.replace("__TITLE__", product.title);
+        filledTemplateText = filledTemplateText.replace("__PRICE__", product.viewCountText);
 
-// store the output in output.html file
+        finalCardsText += `\n${filledTemplateText} \n`;
+    });
+
+    const finalHTML = indexFileText.replace("__PLACE_HOLDER__", finalCardsText);
+
+    saveOutputFile(finalHTML);
+};
+
+getDummyJsonProductsData(createUI);
