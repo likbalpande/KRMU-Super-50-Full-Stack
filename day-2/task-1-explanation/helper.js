@@ -11,18 +11,19 @@ const getCardTemplateFile = () => {
     return data;
 };
 
-const saveOutputFile = (cardsText) => {
+const saveOutputFile = (cardsText, res) => {
     const indexFileText = getIndexFile();
     const finalFile = indexFileText.replace("__PLACE_HOLDER__", cardsText);
     fs.writeFileSync("./output/output.html", finalFile);
+    res.end(finalFile);
 };
 
-const getData = (successCallback) => {
+const getData = (successCallback, res) => {
     const req = fetch(url);
     req.then((response) => {
         const pr2 = response.json();
         pr2.then((data) => {
-            successCallback(data);
+            successCallback(data, res);
         });
     });
 };

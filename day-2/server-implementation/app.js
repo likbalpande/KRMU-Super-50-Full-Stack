@@ -1,6 +1,6 @@
 const { getCardTemplateFile, getIndexFile, getData, saveOutputFile } = require("./helper");
 
-const main = (data) => {
+const main = (data, res) => {
     const { recipes } = data;
     let finalCardsText = ``;
 
@@ -14,7 +14,11 @@ const main = (data) => {
         finalCardsText += newText;
     });
 
-    saveOutputFile(finalCardsText);
+    saveOutputFile(finalCardsText, res);
 };
 
-getData(main);
+const render = (res) => {
+    getData(main, res);
+};
+
+module.exports = { render };
