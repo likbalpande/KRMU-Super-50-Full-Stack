@@ -16,12 +16,38 @@ mongoose
         console.log("----- Error in DB Connection", err.message);
     });
 
+// const movieSchema = new mongoose.Schema({
+//     title: String,
+//     rating: Number,
+//     releaseYear: Number,
+//     description: String,
+// });
+
+// https://mongoosejs.com/docs/validation.html#:~:text=Each%20of%20the%20validator%20links%20above%20provide%20more%20information%20about%20how%20to%20enable%20them%20and%20customize%20their%20error%20messages.
 const movieSchema = new mongoose.Schema({
-    title: String,
-    rating: Number,
-    releaseYear: Number,
+    title: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+    },
+    rating: {
+        type: Number,
+        min: 1,
+        max: 10,
+        required: [true, "Rating should be present & in between 1 to 10"],
+    },
+    releaseYear: {
+        type: Number,
+        default: 2000,
+    },
     description: String,
+    origin: {
+        type: String,
+        enum: ["Bollywood", "Hollywood", "Online Platform"],
+    },
 });
+
 const Movies = mongoose.model("Movie", movieSchema);
 
 const app = express();
@@ -40,8 +66,21 @@ app.use(express.json());
 app.post("/movies", async (req, res) => {
     try {
         const movieData = req.body;
-        const result = await Movies.insertOne(movieData);
+        let result;
+
+        try {
+            result = await Movies.insertOne(movieData);
+        } catch (err) {
+            res.status(400);
+            res.json({
+                success: false,
+                message: err.message,
+            });
+            return;
+        }
+
         console.log("result", result);
+        res.status(201);
         res.json({
             success: true,
             message: "Movie Inserted",
