@@ -32,6 +32,33 @@ app.use((req, res, next) => {
     next();
 });
 
+// it reads the body in json format
+app.use(express.json());
+
+// Creating Movies
+// POST http://localhost:3000/movies
+app.post("/movies", async (req, res) => {
+    try {
+        const movieData = req.body;
+        const result = await Movies.insertOne(movieData);
+        console.log("result", result);
+        res.json({
+            success: true,
+            message: "Movie Inserted",
+            data: {
+                movie: result,
+            },
+        });
+    } catch (err) {
+        console.log("Error in POST movies:", err.message);
+        res.status(500);
+        res.json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+});
+
 // GET handler for "/"
 app.get("/", (req, res) => {
     res.send("Hello app!");
