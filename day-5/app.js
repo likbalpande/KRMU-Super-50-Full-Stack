@@ -14,6 +14,9 @@ const app = express();
 // request logging
 app.use(morgan("dev"));
 
+// express will read the body in the json format
+app.use(express.json());
+
 app.use("/api/v1", v1Router);
 
 // -------------------------------------
