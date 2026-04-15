@@ -96,7 +96,7 @@ const loginController = async (req, res) => {
             expiresIn: 24 * 60 * 60,
         });
 
-        res.cookie("authorization", token, { maxAge: 24 * 60 * 60, httpOnly: true, secure: true });
+        res.cookie("authorization", token, { maxAge: 24 * 60 * 60, httpOnly: true, sameSite: 'strict', secure: true });
 
         res.status(200).json({
             success: true,
