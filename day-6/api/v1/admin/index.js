@@ -3,7 +3,7 @@ const { hotelsRouter } = require("./hotels");
 
 const adminRouter = Router();
 
-adminRouter.use("/hotels", hotelsRouter);
+adminRouter.use("/hotels", validateUser, hotelsRouter);
 
 // TODO:
 // adminRouter.use("/rooms", roomsRouter);
