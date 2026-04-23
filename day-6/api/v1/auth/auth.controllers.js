@@ -1,6 +1,6 @@
 const { User } = require("../../../models/usersSchema");
 const bcrypt = require("bcryptjs");
-var jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const signupController = async (req, res) => {
     try {
@@ -92,11 +92,16 @@ const loginController = async (req, res) => {
             return;
         }
 
-        const token = jwt.sign({ email: user.email, _id: user._id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ email: user.email, _id: user._id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: 24 * 60 * 60,
         });
 
-        res.cookie("authorization", token, { maxAge: 24 * 60 * 60, httpOnly: true, sameSite: 'strict', secure: true });
+        res.cookie("authorization", `Bearer ${token}`, {
+            maxAge: 24 * 60 * 60,
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+        });
 
         res.status(200).json({
             success: true,
